@@ -27,8 +27,9 @@ tfr<-function(x=NULL,freqs=seq(8,50,by=2),Fs=1000,width=7){
   return(complex_tfr)
 }
 
-#' Time Frequency Representation (based on Dr. Christopher Laine matlab code).
+#' Phase angle between complex valued vectors (based on Dr. Christopher Laine matlab code).
 #' @param x complex valued vector
+#' @param y complex valued vector
 #' @examples
 #' x<-c(2 +   2i,3 +   2i,4 +   7i,5 +   7i)
 #' y<-c(3 +   2i,4 +   2i,5 +   7i,6 +   7i)
