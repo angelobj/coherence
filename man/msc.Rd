@@ -2,7 +2,7 @@
 % Please edit documentation in R/coherence.R
 \name{msc}
 \alias{msc}
-\title{Time Frequency Representation (based on Dr. Christopher Laine matlab code).}
+\title{Phase angle between complex valued vectors (based on Dr. Christopher Laine matlab code).}
 \usage{
 msc(x, y)
 }
@@ -12,7 +12,7 @@ msc(x, y)
 \item{y}{complex valued vector}
 }
 \description{
-Time Frequency Representation (based on Dr. Christopher Laine matlab code).
+Phase angle between complex valued vectors (based on Dr. Christopher Laine matlab code).
 }
 \examples{
 x<-c(2 +   2i,3 +   2i,4 +   7i,5 +   7i)
