@@ -24,3 +24,4 @@ tfr<-function(x=NULL,freqs=seq(8,50,by=2),Fs=1000,width=7){
   },USE.NAMES = T)
   return(complex_tfr)
 }
+other<-function(){}
