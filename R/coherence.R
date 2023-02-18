@@ -1,3 +1,5 @@
+# git push -u origin main
+
 #' Time Frequency Representation (based on Dr. Christopher Laine matlab code).
 #' @param x Vector
 #' @param freqs Frequencies
@@ -24,4 +26,19 @@ tfr<-function(x=NULL,freqs=seq(8,50,by=2),Fs=1000,width=7){
   },USE.NAMES = T)
   return(complex_tfr)
 }
-other<-function(){}
+
+#' Time Frequency Representation (based on Dr. Christopher Laine matlab code).
+#' @param x complex valued vector
+#' @examples
+#' x<-c(2 +   2i,3 +   2i,4 +   7i,5 +   7i)
+#' y<-c(3 +   2i,4 +   2i,5 +   7i,6 +   7i)
+#' msc(x,y)
+#' @param y complex valued vector
+#' @export
+msc<-function(x,y){
+  mscoh<-(abs(sum(x*Conj(y))^2))/(sum(abs(x)^2)*sum(abs(y)^2))
+  coh<-(abs(sum(x*Conj(y))))/sqrt((sum(abs(x)^2)*sum(abs(y)^2)))
+  icoh<-Im(((sum(x*Conj(y))))/sqrt((sum(abs(x)^2)*sum(abs(y)^2))))
+  phase_angle<-Arg(((sum(x*Conj(y))))/sqrt((sum(abs(x)^2)*sum(abs(y)^2))));
+  return(phase_angle)
+}
