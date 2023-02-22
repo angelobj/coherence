@@ -1,4 +1,5 @@
 # git push -u origin main
+# roxygen2::roxygenise()
 
 #' Time Frequency Representation (based on Dr. Christopher Laine matlab code).
 #' @param x Vector
@@ -40,7 +41,7 @@ msc<-function(x,y){
   coh<-(abs(sum(x*Conj(y))))/sqrt((sum(abs(x)^2)*sum(abs(y)^2)))
   icoh<-Im(((sum(x*Conj(y))))/sqrt((sum(abs(x)^2)*sum(abs(y)^2))))
   phase_angle<-Arg(((sum(x*Conj(y))))/sqrt((sum(abs(x)^2)*sum(abs(y)^2))));
-  return(phase_angle)
+  return(mscoh)
 }
 
 #' Coherence (rho) to Z-score conversion(based on Dr. Christopher Laine matlab code).
@@ -64,6 +65,7 @@ coh2z<-function(x,datalen,window,overlap,Freqs){
     Lvec=w*L2;
     Fz = atanh(sqrt(x));
     Zscores = Fz/sqrt(1/(2*Lvec));
+    return(Zscores)
   }
 }
 
