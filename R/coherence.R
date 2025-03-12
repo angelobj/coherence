@@ -145,8 +145,8 @@ simulateSignals <- function(samplingFreq = 1000, duration = 8, target_freq = 10,
   signal1 <- sin(2 * pi * target_freq * Time)
 
   # Generate the second signal (sine wave + broadband noise)
-  noise <- rnorm(length(Time), mean = 0, sd = noise_level)  # White noise
-  signal2 <- signal1 + noise  # Ensures correlation only at target frequency
+  signal2 <- signal1 + rnorm(length(Time), mean = 0, sd = noise_level)  # Ensures correlation only at target frequency
+  signal1<-signal1+rnorm(length(Time), mean = 0, sd = noise_level)
 
   # Store in a data frame
   signals <- data.frame(Time, signal1, signal2)
@@ -180,13 +180,13 @@ simulateSignals <- function(samplingFreq = 1000, duration = 8, target_freq = 10,
       ggplot2::guides(color = ggplot2::guide_legend(reverse = TRUE)) +
       ggplot2::theme(
         legend.position = 'top',
-        legend.title = ggplot2::element_blank(),
-        strip.background = ggplot2::element_rect(fill = 'white'),
-        panel.grid.major = ggplot2::element_blank(),
-        panel.grid.minor = ggplot2::element_blank(),
-        panel.background = ggplot2::element_blank(),
-        axis.line = ggplot2::element_line(colour = "black"),
-        text = ggplot2::element_text(size = 20)
+        legend.title = element_blank(),
+        strip.background = element_rect(fill = 'white'),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.background = element_blank(),
+        axis.line = element_line(colour = "black"),
+        text = element_text(size = 20)
       )
 
     # Frequency-domain (FFT) plot
@@ -194,19 +194,18 @@ simulateSignals <- function(samplingFreq = 1000, duration = 8, target_freq = 10,
       ggplot2::geom_line(aes(x = Freqs, y = Amplitude, colour = Signal), data = fft_data, alpha = 0.9) +
       ggplot2::scale_color_manual(values = c('Signal 1' = 'red', 'Signal 2' = '#0f5dd1')) +
       ggplot2::guides(color = ggplot2::guide_legend(reverse = TRUE)) +
-      ggplot2::facet_wrap(~Signal, scales = 'free_y') +
       ggplot2::theme(
-        strip.text.x = ggplot2::element_blank(),
-        strip.text = ggplot2::element_text(color = "black", size = 15),
+        strip.text.x = element_blank(),
+        strip.text = element_text(color = "black", size = 15),
         legend.position = 'top',
-        legend.title = ggplot2::element_blank(),
+        legend.title = element_blank(),
         strip.background = ggplot2::element_blank(),
         panel.grid.major = ggplot2::element_blank(),
         panel.grid.minor = ggplot2::element_blank(),
         panel.background = ggplot2::element_blank(),
         axis.line = ggplot2::element_line(colour = "black"),
         text = ggplot2::element_text(size = 20)
-      )
+      ) + ggplot2::facet_wrap(~Signal, scales = 'free_y')
 
     # Combine plots
     ggpubr::ggarrange(time_plot, fft_plot, common.legend = TRUE, nrow = 1)
@@ -224,7 +223,6 @@ simulateSignals <- function(samplingFreq = 1000, duration = 8, target_freq = 10,
     stop("out must be 'data' or 'all'")
   }
 }
-
 #' Perform Fast Fourier Transform (FFT) Analysis for easy plotting
 #'
 #' Computes the Fast Fourier Transform (FFT) of a given signal and returns its frequency spectrum.
