@@ -19,9 +19,9 @@ Should be a fraction of the window length, typically between 0 and `window`. Def
 \item{nfft}{Integer specifying the number of points used in the FFT computation. Should be a power of 2 and at least as large as the window length. Default is 2000.}
 }
 \value{
-A list containing:
-  \item{f}{Frequency vector}
-  \item{Cxy}{Coherence estimate between the two signals}
+A data.frame containing:
+  \item{Freqs}{Frequency vector}
+  \item{Coh}{Coherence estimate between the two signals}
 }
 \description{
 Computes the magnitude square coherence between two signals using the `gsignal::mscohere` function.

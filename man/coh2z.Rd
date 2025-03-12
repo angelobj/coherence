@@ -4,7 +4,7 @@
 \alias{coh2z}
 \title{Coherence (rho) to Z-score conversion(based on Dr. Christopher Laine matlab code).}
 \usage{
-coh2z(x, datalen, window, overlap, Freqs)
+coh2z(x, datalen, window, overlap)
 }
 \arguments{
 \item{x}{Raw coherence values}
@@ -14,8 +14,6 @@ coh2z(x, datalen, window, overlap, Freqs)
 \item{window}{Vector for tapering segments: rectwin(1024) or gausswin(2048);}
 
 \item{overlap}{Fraction of the window to overlap, e.g. 0 or 0.5}
-
-\item{Freqs}{Frequency vector (used for de-biasing) associated with the input coherence vector/matrix. For most purposes 1 or 2 seconds is good, so use whatever number of samples gets you to 1 or 2 seconds (has to be a power of 2, like 1024 or 2048).}
 }
 \description{
 Coherence (rho) to Z-score conversion(based on Dr. Christopher Laine matlab code).
