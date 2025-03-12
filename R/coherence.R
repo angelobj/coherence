@@ -1,37 +1,97 @@
-#' Magnitude Square Coherence Estimation
+#' Compute Magnitude-Squared Coherence based on 'gsignal' package
 #'
-#' Computes the magnitude square coherence between two signals using the `gsignal::mscohere` function.
-#' This function estimates the coherence between two signals based on the Hann window and given parameters.
+#' Computes the magnitude-squared coherence between two signals using the `gsignal::mscohere()` function.
+#' This function estimates how well the two signals correspond at each frequency.
 #'
-#' @param x A data frame with two numeric columns representing the two signals to analyze.
+#' @param x A data frame with exactly two numeric columns representing the signals to estimate magnitude.squared coherence from.
 #' @param window Integer specifying the length of the Hann window for segmenting the signals. Default is 300.
-#' @param overlap Numeric value specifying the number of overlapping samples between adjacent segments.
-#'               Should be a fraction of the window length, typically between 0 and `window`. Default is calculated as `cohOverlap * length(hann(window)) / samplingFreq`.
-#' @param samplingFreq Sampling frequency of the signals in Hz (samples per second). Default is 1000.
-#' @param nfft Integer specifying the number of points used in the FFT computation. Should be a power of 2 and at least as large as the window length. Default is 2000.
+#' @param overlap Numeric value (between 0 and 1) specifying the fraction of overlap between adjacent segments. Default is 0.5 (50% overlap).
+#' @param samplingFreq Numeric value specifying the sampling frequency in Hz. Default is 1000.
+#' @param nfft Integer specifying the number of FFT points used in computation. Default is 2000.
+#' @param plot Logical indicating whether to generate a plot of the coherence spectrum. Default is `TRUE`.
+#' @param title Optional character string specifying the plot title. If `NULL`, no title is displayed.
+#' @param xlab Optional character string specifying the x-axis label. Default is `"Frequencies (Hz)"`.
+#' @param ylab Optional character string specifying the y-axis label. Default is `"Magnitude-Squared Coherence"`.
+#' @param out Character string specifying the output format:
+#'   \item{"data"}{(Default) Returns a data frame containing the coherence results.}
+#'   \item{"all"}{Returns a list containing both the coherence data and the plot.}
 #'
-#' @return A data.frame containing:
-#'   \item{Freqs}{Frequency vector}
-#'   \item{Coh}{Coherence estimate between the two signals}
+#' @return Depending on the value of `out`:
+#'   \item{data}{A data frame with:
+#'     \item{Freqs}{Frequencies in Hz}
+#'     \item{Cxy}{Magnitude-squared coherence values at each frequency}
+#'   }
+#'   \item{all}{A list containing:
+#'     \item{coh}{Coherence results as a data frame}
+#'     \item{plot}{Coherence plot (if `plot = TRUE`)}
+#'   }
+#'
+#' @examples
+#' # Generate simulated signals
+#' signals <- simulateSignals(samplingFreq = 1000, duration = 8, target_freq = 10, noise_level = 0.5, plot = FALSE)
+#'
+#' # Compute coherence and return data only
+#' coh_result <- coherence(signals[, c("signal1", "signal2")], samplingFreq = 1000, out = "data", plot = FALSE)
+#' head(coh_result)
+#'
+#' # Compute coherence and return both data and plot
+#' coh_result <- coherence(signals[, c("signal1", "signal2")], samplingFreq = 1000, out = "all", plot = TRUE)
+#' print(coh_result$plot)
+#'
+#' # Custom plot labels
+#' coherence(signals[, c("signal1", "signal2")], samplingFreq = 1000, plot = TRUE,
+#'           title = "Coherence Analysis", xlab = "Frequency (Hz)", ylab = "Coherence Magnitude")
 #'
 #' @export
-coherence <- function(x, window = 300, overlap = 0.5, samplingFreq = 1000, nfft = 2000) {
+coherence <- function(x, window = 300, overlap = 0.5, samplingFreq = 1000, nfft = 2000,plot=T,
+                      title=NULL,xlab=NULL,ylab=NULL,
+                      out='data') {
   if (!requireNamespace("gsignal", quietly = TRUE)) {
     stop("The 'gsignal' package is required but not installed. Install it using install.packages('gsignal').")
   }
   if (!is.data.frame(x)) stop("x must be a data.frame")
   if (ncol(x) != 2) stop("x must have two columns")
 
-  print(overlap*length(gsignal::hann(window))/samplingFreq)
-
-  coh<-gsignal::mscohere(
+  coh_data<<-gsignal::mscohere(
     as.matrix(x),
     window = gsignal::hann(window),
     overlap=overlap*length(gsignal::hann(window))/samplingFreq,
     nfft = nfft,
     fs = samplingFreq
-  )
-  coh<-data.frame('Freqs'=coh[['freq']],'Coh'=coh[['coh']])
+  ) %>% do.call(bind_cols,.)  %>% as.data.frame() %>% setNames(c('Freqs','Cxy'))
+
+  out_plot <- if (plot) {
+
+    ggplot2::ggplot(coh_data, ggplot2::aes(x = Freqs, y = Cxy)) +
+      ggplot2::geom_line(color = "blue", linewidth = 1) +  # Ensuring proper mapping of data
+      ggplot2::labs(
+        title = if (!is.null(title)) title else NULL,
+        x = if (!is.null(xlab)) xlab else "Frequencies (Hz)",
+        y = if (!is.null(ylab)) ylab else "Magnitude-Squared Coherence"
+      ) +
+      ggplot2::theme_minimal(base_size = 15) +  # Clean plot style
+      ggplot2::theme(
+        legend.position = "none",
+        panel.grid.major = ggplot2::element_blank(),
+        panel.grid.minor = ggplot2::element_blank(),
+        panel.background = ggplot2::element_blank(),
+        axis.line = ggplot2::element_line(colour = "black")
+      )
+  } else {
+    NULL
+  }
+
+  # Ensure the plot is displayed when `plot = TRUE`
+  if (!is.null(out_plot)) print(out_plot)
+
+  # Return results
+  if(is.null(out)||out=='data'){
+    return(coh_data)
+  }else if(!is.null(out)&&out=='all'){
+    return(list(coh = coh_data, plot = out_plot))
+  }else{
+    stop("out must be 'data' or 'all'")
+  }
 }
 
 #' Generate Simulated Signals and Perform FFT Analysis
