@@ -1,3 +1,6 @@
+# git push -u origin main
+# roxygen2::roxygenise()
+
 #' Magnitude Square Coherence Estimation
 #'
 #' Computes the magnitude square coherence between two signals using the `gsignal::mscohere` function.
@@ -66,8 +69,8 @@ coherence <- function(x, window = 300, overlap = 0.5, samplingFreq = 1000, nfft 
 #' result <- simulateSignals(out = "all")
 #'
 #' @export
-simulateSignals <- function(samplingFreq = 1000, duration = 8, target_freq = 10, noise_level = 0.5,
-                            plot = TRUE, filter_freqs = NULL, seed = 1, out = "data") {
+simulateSignals <- function(samplingFreq = 1000, duration = 8, target_freq = 10, noise_level = 0.5, plot = TRUE,
+                            filter_freqs = NULL,seed=1,out='data') {
   set.seed(seed)  # Ensures reproducibility
 
   # Ensure necessary packages are available
@@ -100,8 +103,10 @@ simulateSignals <- function(samplingFreq = 1000, duration = 8, target_freq = 10,
       Signal == 'signal2' ~ 'Signal 2'
     ), levels = c('Signal 1', 'Signal 2'), ordered = TRUE))
 
+
   ### Generate Plots ###
   out_plot <- if (plot) {
+
     # Prepare long-format data for time-domain plotting
     long_signals <- signals %>%
       tidyr::pivot_longer(!Time, names_to = 'Signal', values_to = 'Amplitude') %>%
@@ -113,12 +118,15 @@ simulateSignals <- function(samplingFreq = 1000, duration = 8, target_freq = 10,
     # Time-domain plot
     time_plot <- ggplot2::ggplot() +
       ggplot2::geom_line(aes(x = Time, y = Amplitude, colour = Signal),
-                         data = long_signals, alpha = 0.9) +
+                         data = long_signals, alpha = 0.9) +  # Corrected data source
       ggplot2::scale_color_manual(values = c('Signal 1' = 'red', 'Signal 2' = '#0f5dd1')) +
       ggplot2::guides(color = ggplot2::guide_legend(reverse = TRUE)) +
       ggplot2::theme(
         legend.position = 'top',
         legend.title = element_blank(),
+        strip.background = element_rect(fill = 'white'),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
         panel.background = element_blank(),
         axis.line = element_line(colour = "black"),
         text = element_text(size = 20)
@@ -130,22 +138,30 @@ simulateSignals <- function(samplingFreq = 1000, duration = 8, target_freq = 10,
       ggplot2::scale_color_manual(values = c('Signal 1' = 'red', 'Signal 2' = '#0f5dd1')) +
       ggplot2::guides(color = ggplot2::guide_legend(reverse = TRUE)) +
       ggplot2::theme(
+        strip.text.x = element_blank(),
         legend.position = 'top',
         legend.title = element_blank(),
-        panel.background = element_blank(),
-        axis.line = element_line(colour = "black"),
-        text = element_text(size = 20)
+        strip.background = ggplot2::element_rect(fill = 'white'),
+        panel.grid.major = ggplot2::element_blank(),
+        panel.grid.minor = ggplot2::element_blank(),
+        panel.background = ggplot2::element_blank(),
+        axis.line = ggplot2::element_line(colour = "black"),
+        text = ggplot2::element_text(size = 20)
       ) + ggplot2::facet_wrap(~Signal, scales = 'free_y')
 
+    # Combine plots
     ggpubr::ggarrange(time_plot, fft_plot, common.legend = TRUE, nrow = 1)
   } else { NULL }
 
+  if(!is.null(out_plot))
+    print(out_plot)
+
   # Return results
-  if (out == "data") {
+  if(is.null(out)||out=='data'){
     return(signals)
-  } else if (out == "all") {
+  }else if(!is.null(out)&&out=='all'){
     return(list(signals = signals, fft = fft_data, plot = out_plot))
-  } else {
+  }else{
     stop("out must be 'data' or 'all'")
   }
 }
