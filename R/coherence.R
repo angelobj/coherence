@@ -134,6 +134,7 @@ simulateSignals <- function(samplingFreq = 1000, duration = 8, target_freq = 10,
       ggplot2::geom_line(aes(x = Freqs, y = Amplitude, colour = Signal), data = fft_data, alpha = 0.9) +
       ggplot2::scale_color_manual(values = c('Signal 1' = 'red', 'Signal 2' = '#0f5dd1')) +
       ggplot2::guides(color = ggplot2::guide_legend(reverse = TRUE)) +
+      ggplot2::facet_wrap(~Signal, scales = 'free_y') +
       ggplot2::theme(
         strip.text.x = ggplot2::element_blank(),
         strip.text = ggplot2::element_text(color = "black", size = 15),
@@ -145,7 +146,7 @@ simulateSignals <- function(samplingFreq = 1000, duration = 8, target_freq = 10,
         panel.background = ggplot2::element_blank(),
         axis.line = ggplot2::element_line(colour = "black"),
         text = ggplot2::element_text(size = 20)
-      ) + ggplot2::facet_wrap(~Signal, scales = 'free_y')
+      )
 
     # Combine plots
     ggpubr::ggarrange(time_plot, fft_plot, common.legend = TRUE, nrow = 1)
