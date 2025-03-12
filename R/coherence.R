@@ -1,5 +1,55 @@
-# git push -u origin main
-# roxygen2::roxygenise()
+#' Magnitude Square Coherence Estimation
+#'
+#' Computes the magnitude square coherence between two signals using the `gsignal::mscohere` function.
+#' This function estimates the coherence between two signals based on the Hann window and given parameters.
+#'
+#' @param x A data frame with two numeric columns representing the two signals to analyze.
+#' @param window Integer specifying the length of the Hann window for segmenting the signals. Default is 300.
+#' @param overlap Numeric value specifying the number of overlapping samples between adjacent segments.
+#'               Should be a fraction of the window length, typically between 0 and `window`. Default is calculated as `cohOverlap * length(hann(window)) / samplingFreq`.
+#' @param samplingFreq Sampling frequency of the signals in Hz (samples per second). Default is 1000.
+#' @param nfft Integer specifying the number of points used in the FFT computation. Should be a power of 2 and at least as large as the window length. Default is 2000.
+#'
+#' @return A list containing:
+#'   \item{f}{Frequency vector}
+#'   \item{Cxy}{Coherence estimate between the two signals}
+#'
+#' @export
+coherence <- function(x, window = 300, overlap = 0.5, samplingFreq = 1000, nfft = 2000) {
+  if (!requireNamespace("gsignal", quietly = TRUE)) {
+    stop("The 'gsignal' package is required but not installed. Install it using install.packages('gsignal').")
+  }
+  if (!is.data.frame(x)) stop("x must be a data.frame")
+  if (ncol(x) != 2) stop("x must have two columns")
+
+  gsignal::mscohere(
+    x %>% as.matrix(),
+    window = gsignal::hann(window),
+    overlap = overlap * window,  # Now using a proportion of the window
+    nfft = nfft,  # Ensure it is passed correctly
+    fs = samplingFreq
+  )
+}
+
+#' Fisher z-transformation
+#'
+#' Fisher's z-transformation converts Pearson's r to the normally distributed variable z.
+#' The formula for the transformation is:
+#' \deqn{z_r = \tanh^{-1}(r) = \frac{1}{2} \log \left( \frac{1+r}{1-r} \right)}
+#'
+#' @param x Numeric vector or matrix containing Pearson correlation coefficients (r) to be transformed.
+#' @return A numeric vector or matrix with transformed values.
+#' @export
+fisherz <- function(x) {
+  # Check if DescTools is installed
+  if (!requireNamespace("DescTools", quietly = TRUE)) {
+    stop("The 'DescTools' package is required but not installed. Install it using install.packages('DescTools').")
+  }
+
+  # Perform Fisher z-transformation
+  DescTools::FisherZ(x)
+}
+
 
 #' Time Frequency Representation (based on Dr. Christopher Laine matlab code).
 #' @param x Vector
@@ -49,9 +99,8 @@ msc<-function(x,y){
 #' @param datalen The total length (in samples) of the original signals that coherence was calculated on (samples, not segments or seconds)
 #' @param window Vector for tapering segments: rectwin(1024) or gausswin(2048);
 #' @param overlap Fraction of the window to overlap, e.g. 0 or 0.5
-#' @param Freqs Frequency vector (used for de-biasing) associated with the input coherence vector/matrix. For most purposes 1 or 2 seconds is good, so use whatever number of samples gets you to 1 or 2 seconds (has to be a power of 2, like 1024 or 2048).
 #' @export
-coh2z<-function(x,datalen,window,overlap,Freqs){
+coh2z<-function(x,datalen,window,overlap){
   winlen=length(window);
   Lvec<-if(overlap==0){floor(datalen/winlen)}else{
     L1=floor(datalen/winlen);
@@ -68,5 +117,3 @@ coh2z<-function(x,datalen,window,overlap,Freqs){
     return(Zscores)
   }
 }
-
-
