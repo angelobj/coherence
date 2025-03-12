@@ -120,13 +120,13 @@ simulateSignals <- function(samplingFreq = 1000, duration = 8, target_freq = 10,
       ggplot2::guides(color = ggplot2::guide_legend(reverse = TRUE)) +
       ggplot2::theme(
         legend.position = 'top',
-        legend.title = element_blank(),
-        strip.background = element_rect(fill = 'white'),
-        panel.grid.major = element_blank(),
-        panel.grid.minor = element_blank(),
-        panel.background = element_blank(),
-        axis.line = element_line(colour = "black"),
-        text = element_text(size = 20)
+        legend.title = ggplot2::element_blank(),
+        strip.background = ggplot2::element_rect(fill = 'white'),
+        panel.grid.major = ggplot2::element_blank(),
+        panel.grid.minor = ggplot2::element_blank(),
+        panel.background = ggplot2::element_blank(),
+        axis.line = ggplot2::element_line(colour = "black"),
+        text = ggplot2::element_text(size = 20)
       )
 
     # Frequency-domain (FFT) plot
@@ -135,10 +135,10 @@ simulateSignals <- function(samplingFreq = 1000, duration = 8, target_freq = 10,
       ggplot2::scale_color_manual(values = c('Signal 1' = 'red', 'Signal 2' = '#0f5dd1')) +
       ggplot2::guides(color = ggplot2::guide_legend(reverse = TRUE)) +
       ggplot2::theme(
-        strip.text.x = element_blank(),
-        strip.text = element_text(color = "black", size = 15),
+        strip.text.x = ggplot2::element_blank(),
+        strip.text = ggplot2::element_text(color = "black", size = 15),
         legend.position = 'top',
-        legend.title = element_blank(),
+        legend.title = ggplot2::element_blank(),
         strip.background = ggplot2::element_blank(),
         panel.grid.major = ggplot2::element_blank(),
         panel.grid.minor = ggplot2::element_blank(),
