@@ -1,6 +1,3 @@
-# git push -u origin main
-# roxygen2::roxygenise()
-
 #' Magnitude Square Coherence Estimation
 #'
 #' Computes the magnitude square coherence between two signals using the `gsignal::mscohere` function.
@@ -139,9 +136,10 @@ simulateSignals <- function(samplingFreq = 1000, duration = 8, target_freq = 10,
       ggplot2::guides(color = ggplot2::guide_legend(reverse = TRUE)) +
       ggplot2::theme(
         strip.text.x = element_blank(),
+        strip.text = element_text(color = "black", size = 15),
         legend.position = 'top',
         legend.title = element_blank(),
-        strip.background = ggplot2::element_rect(fill = 'white'),
+        strip.background = ggplot2::element_blank(),
         panel.grid.major = ggplot2::element_blank(),
         panel.grid.minor = ggplot2::element_blank(),
         panel.background = ggplot2::element_blank(),
