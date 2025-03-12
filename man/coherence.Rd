@@ -2,7 +2,7 @@
 % Please edit documentation in R/coherence.R
 \name{coherence}
 \alias{coherence}
-\title{Compute Magnitude-Squared Coherence based on gsignal package}
+\title{Compute Magnitude-Squared Coherence based on 'gsignal' package}
 \usage{
 coherence(
   x,
@@ -22,7 +22,7 @@ coherence(
 
 \item{window}{Integer specifying the length of the Hann window for segmenting the signals. Default is 300.}
 
-\item{overlap}{Numeric value (between 0 and 1) specifying the fraction of overlap between adjacent segments. Default is 0.5 (50% overlap).}
+\item{overlap}{Numeric value (between 0 and 1) specifying the fraction of overlap between adjacent segments. Default is 0.5 (50\% overlap).}
 
 \item{samplingFreq}{Numeric value specifying the sampling frequency in Hz. Default is 1000.}
 
