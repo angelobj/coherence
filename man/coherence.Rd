@@ -41,15 +41,14 @@ coherence(
 \item{"all"}{Returns a list containing both the coherence data and the plot.}}
 }
 \value{
-Depending on the value of `out`:
-  \item{data}{A data frame with:
+Depending on the value of 'out':
+
+1. 'data': A data frame with:
     \item{Freqs}{Frequencies in Hz}
     \item{Cxy}{Magnitude-squared coherence values at each frequency}
-  }
-  \item{all}{A list containing:
-    \item{coh}{Coherence results as a data frame}
+2. 'all' A list containing:
+    \item{coh}{Coherence results as a data frame with Freqs and Cxy as in (1)}
     \item{plot}{Coherence plot (if `plot = TRUE`)}
-  }
 }
 \description{
 Computes the magnitude-squared coherence between two signals using the `gsignal::mscohere()` function.
