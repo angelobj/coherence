@@ -2,28 +2,73 @@
 % Please edit documentation in R/coherence.R
 \name{coherence}
 \alias{coherence}
-\title{Magnitude Square Coherence Estimation}
+\title{Compute Magnitude-Squared Coherence based on gsignal package}
 \usage{
-coherence(x, window = 300, overlap = 0.5, samplingFreq = 1000, nfft = 2000)
+coherence(
+  x,
+  window = 300,
+  overlap = 0.5,
+  samplingFreq = 1000,
+  nfft = 2000,
+  plot = T,
+  title = NULL,
+  xlab = NULL,
+  ylab = NULL,
+  out = "data"
+)
 }
 \arguments{
-\item{x}{A data frame with two numeric columns representing the two signals to analyze.}
+\item{x}{A data frame with exactly two numeric columns representing the signals to estimate magnitude.squared coherence from.}
 
 \item{window}{Integer specifying the length of the Hann window for segmenting the signals. Default is 300.}
 
-\item{overlap}{Numeric value specifying the number of overlapping samples between adjacent segments.
-Should be a fraction of the window length, typically between 0 and `window`. Default is calculated as `cohOverlap * length(hann(window)) / samplingFreq`.}
+\item{overlap}{Numeric value (between 0 and 1) specifying the fraction of overlap between adjacent segments. Default is 0.5 (50% overlap).}
 
-\item{samplingFreq}{Sampling frequency of the signals in Hz (samples per second). Default is 1000.}
+\item{samplingFreq}{Numeric value specifying the sampling frequency in Hz. Default is 1000.}
 
-\item{nfft}{Integer specifying the number of points used in the FFT computation. Should be a power of 2 and at least as large as the window length. Default is 2000.}
+\item{nfft}{Integer specifying the number of FFT points used in computation. Default is 2000.}
+
+\item{plot}{Logical indicating whether to generate a plot of the coherence spectrum. Default is `TRUE`.}
+
+\item{title}{Optional character string specifying the plot title. If `NULL`, no title is displayed.}
+
+\item{xlab}{Optional character string specifying the x-axis label. Default is `"Frequencies (Hz)"`.}
+
+\item{ylab}{Optional character string specifying the y-axis label. Default is `"Magnitude-Squared Coherence"`.}
+
+\item{out}{Character string specifying the output format:
+\item{"data"}{(Default) Returns a data frame containing the coherence results.}
+\item{"all"}{Returns a list containing both the coherence data and the plot.}}
 }
 \value{
-A data.frame containing:
-  \item{Freqs}{Frequency vector}
-  \item{Coh}{Coherence estimate between the two signals}
+Depending on the value of `out`:
+  \item{data}{A data frame with:
+    \item{Freqs}{Frequencies in Hz}
+    \item{Cxy}{Magnitude-squared coherence values at each frequency}
+  }
+  \item{all}{A list containing:
+    \item{coh}{Coherence results as a data frame}
+    \item{plot}{Coherence plot (if `plot = TRUE`)}
+  }
 }
 \description{
-Computes the magnitude square coherence between two signals using the `gsignal::mscohere` function.
-This function estimates the coherence between two signals based on the Hann window and given parameters.
+Computes the magnitude-squared coherence between two signals using the `gsignal::mscohere()` function.
+This function estimates how well the two signals correspond at each frequency.
+}
+\examples{
+# Generate simulated signals
+signals <- simulateSignals(samplingFreq = 1000, duration = 8, target_freq = 10, noise_level = 0.5, plot = FALSE)
+
+# Compute coherence and return data only
+coh_result <- coherence(signals[, c("signal1", "signal2")], samplingFreq = 1000, out = "data", plot = FALSE)
+head(coh_result)
+
+# Compute coherence and return both data and plot
+coh_result <- coherence(signals[, c("signal1", "signal2")], samplingFreq = 1000, out = "all", plot = TRUE)
+print(coh_result$plot)
+
+# Custom plot labels
+coherence(signals[, c("signal1", "signal2")], samplingFreq = 1000, plot = TRUE,
+          title = "Coherence Analysis", xlab = "Frequency (Hz)", ylab = "Coherence Magnitude")
+
 }

@@ -2,10 +2,8 @@
 % Please edit documentation in R/coherence.R
 \name{fft_analysis}
 \alias{fft_analysis}
-\title{Perform Fast Fourier Transform (FFT) Analysis for plotting}
+\title{Perform Fast Fourier Transform (FFT) Analysis for easy plotting}
 \usage{
-fft_analysis(signal, samplingFreq, label, filter_freqs = NULL)
-
 fft_analysis(signal, samplingFreq, label, filter_freqs = NULL)
 }
 \arguments{
@@ -22,14 +20,7 @@ A data frame containing:
   \item{Freqs}{Frequencies in Hz}
   \item{Amplitude}{Magnitude of the FFT at each frequency}
   \item{Signal}{Label for the signal}
-
-A data frame containing:
-  \item{Freqs}{Frequencies in Hz}
-  \item{Amplitude}{Magnitude of the FFT at each frequency}
-  \item{Signal}{Label for the signal}
 }
 \description{
-Computes the Fast Fourier Transform (FFT) of a given signal and returns its frequency spectrum.
-
 Computes the Fast Fourier Transform (FFT) of a given signal and returns its frequency spectrum.
 }

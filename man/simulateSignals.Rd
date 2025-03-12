@@ -14,17 +14,6 @@ simulateSignals(
   seed = 1,
   out = "data"
 )
-
-simulateSignals(
-  samplingFreq = 1000,
-  duration = 8,
-  target_freq = 10,
-  noise_level = 0.5,
-  plot = TRUE,
-  filter_freqs = NULL,
-  seed = 1,
-  out = "data"
-)
 }
 \arguments{
 \item{samplingFreq}{Numeric value specifying the sampling frequency of the signals in Hz. Default is 1000 Hz.}
@@ -53,29 +42,12 @@ Depending on the value of `out`:
     \item{fft}{FFT results for both signals}
     \item{plot}{Time and frequency domain plots (if `plot = TRUE`)}
   }
-
-Depending on the value of `out`:
-  \item{data}{A data frame containing the simulated signals (time, signal1, signal2).}
-  \item{all}{A list containing:
-    \item{signals}{Data frame with the simulated signals}
-    \item{fft}{FFT results for both signals}
-    \item{plot}{Time and frequency domain plots (if `plot = TRUE`)}
-  }
 }
 \description{
 Simulates two signals: one as a pure sine wave and the other as a noisy version of the sine wave.
 Computes the Fast Fourier Transform (FFT) of both signals and optionally generates plots of the time and frequency domain representations.
-
-Simulates two signals: one as a pure sine wave and the other as a noisy version of the sine wave.
-Computes the Fast Fourier Transform (FFT) of both signals and optionally generates plots of the time and frequency domain representations.
 }
 \examples{
-# Generate signals and return only the data
-result <- simulateSignals()
-
-# Generate signals and return all outputs
-result <- simulateSignals(out = "all")
-
 # Generate signals and return only the data
 result <- simulateSignals()
 
